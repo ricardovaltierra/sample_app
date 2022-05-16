@@ -1,24 +1,43 @@
-# README
+source "https://rubygems.org"
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+ruby "3.1.2"
 
-Things you may want to cover:
+gem "rails",           "7.0.2.3"
+gem "sassc-rails",     "2.1.2"
+gem "sprockets-rails", "3.4.2"
+gem "importmap-rails", "1.0.3"
+gem "turbo-rails",     "1.0.1"
+gem "stimulus-rails",  "1.0.4"
+gem "jbuilder",        "2.11.5"
+gem "puma",            "5.6.4"
+gem "bootsnap",        "1.11.1", require: false
 
-* Ruby version
+group :development, :test do
+  gem "sqlite3", "1.4.2"
+  gem "debug",   "1.4.0", platforms: %i[ mri mingw x64_mingw ]
+end
 
-* System dependencies
+group :development do
+  gem "web-console", "4.2.0"
+end
 
-* Configuration
+group :test do
+  gem "capybara",                 "3.36.0"
+  gem "selenium-webdriver",       "4.1.0"
+  gem "webdrivers",               "5.0.0"
+  gem "rails-controller-testing", "1.0.5"
+  gem "minitest",                 "5.15.0"
+  gem "minitest-reporters",       "1.5.0"
+  gem "guard",                    "2.18.0"
+  gem "guard-minitest",           "2.4.6"
+end
 
-* Database creation
+group :production do
+  gem "pg", "1.3.3"
+end
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem.
+# Uncomment the following line if you're running Rails
+# on a native Windows system:
+# gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
