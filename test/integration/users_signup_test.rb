@@ -30,6 +30,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_template 'users/show'  # As usual learning Rails, after submitting any form
                                   # the next page has the view with the detailed info
                                   # about what was just saved (i.e. Profile page)
+    assert is_logged_in?
     assert_not flash.empty?
   end
 end
