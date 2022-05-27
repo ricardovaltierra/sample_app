@@ -17,6 +17,7 @@ class User < ApplicationRecord
 
   # Returns true if the given token matches the digest.
   def authenticated?(remember_token)
+    return unless remember_digest
     BCrypt::Password.new(remember_digest).is_password?(remember_token)
   end
 

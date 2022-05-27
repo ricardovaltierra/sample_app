@@ -67,4 +67,11 @@ class UserTest < ActiveSupport::TestCase
     @user.password = @user.password_confirmation = "a" * 5
     assert_not @user.valid?
   end
+
+  test "authenticated? should return false for a user with nil digest" do
+    assert_not @user.authenticated?('')	# Here it doesn't matter if he have
+					# not filled the remember_token
+					# attribute, since the error occurs
+					# even before it ever gets required
+  end 
 end
