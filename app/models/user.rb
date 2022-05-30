@@ -13,6 +13,25 @@ class User < ApplicationRecord
   def remember
     self.remember_token = User.new_token
     update_attribute(:remember_digest, User.digest(remember_token))
+    remember_digest
+  end
+
+  # Returns a session token to prevent session hijacking.
+  # We reuse remember_digest for convenience.
+  def session_token
+    remember_digest || remember # Is remember_digest field not
+                                # emtpy? Great! Then let's return
+                                # it. Is it empty? Ok, lets create
+                                # a new token, assign it to the
+                                # class attribute (NOT a db field!)
+                                # 'remember_token'. Next line NOW 
+                                # we can update 'remember_digest'
+                                # (A db field) with the 'digested'
+                                # version of remember_token.
+                                # Short version: remember_digest
+                                # not empty? Return it!. Empty?
+                                # Fill it creating the content,
+                                # and return it!
   end
 
   # Returns true if the given token matches the digest.
