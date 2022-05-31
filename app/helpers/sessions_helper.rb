@@ -2,8 +2,8 @@ module SessionsHelper
   # Logs in the given user
   def log_in(user)
     session[:user_id] = user.id
-    # Safety measure against session replay attacks
-    # the method from the model class!
+    # Safety measure against session replay attacks.
+    # The method below from the model class!
     session[:session_token] = user.session_token
   end
 
@@ -14,7 +14,7 @@ module SessionsHelper
     cookies.permanent[:remember_token] = user.remember_token
   end
 
-  # Returns th current logged-in user (if any).
+  # Returns the user corresponding to the remember token cookie.
   def current_user
     if (user_id = session[:user_id])
       user = User.find_by(id: user_id)
@@ -28,6 +28,11 @@ module SessionsHelper
         @current_user = user
       end
     end
+  end
+
+  # Returns true if the given user is indeed the current one.
+  def current_user?(user)
+    user&.eql? current_user
   end
 
   # Returns true if the user is logged in, false otherwise.
