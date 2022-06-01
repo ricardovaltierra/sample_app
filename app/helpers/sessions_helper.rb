@@ -53,4 +53,12 @@ module SessionsHelper
     reset_session
     @current_user = nil
   end
+
+  # Stores the URL trying to be accessed.
+  def store_location
+    # Is this a GET request? if so, please set the session 
+    # variable :forwarding_url to the value 'original_url'
+    # from request object
+    session[:forwarding_url] = request.original_url if request.get?
+  end
 end
