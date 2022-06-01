@@ -39,6 +39,11 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   test "successful edit with friendly frowarding" do
     get edit_user_path(@user)
     log_in_as(@user)
+    # As said in excersice 1, login executes reset_session,
+    # which drops session[:forwarding_url]. This is enough
+    # to prove that there is no way to redirect again to 
+    # edit_user_path since no URL given.
+    assert_not session[:forwarding_url]
     assert_redirected_to edit_user_url(@user)
     name = "Foo Bar"
     email = "foo@bar.com"
