@@ -34,21 +34,6 @@ class ValidLogin < UsersLogin
   end
 end
 
-class RememberingTest < UsersLogin
-  test "login with remembering" do
-    log_in_as(@user, remember_me: '1')
-    assert_equal cookies[:remember_token], assigns(:user).remember_token
-  end
-
-  test "login without remembering" do
-    # Log in to set the cookie.
-    log_in_as(@user, remember_me: '1')
-    # Log in again and verify that the cookie from above is deleted.
-    log_in_as(@user, remember_me: '0')
-    assert cookies[:remember_token].blank?
-  end
-end
-
 class ValidLoginTest < ValidLogin
 
   test "valid login" do
@@ -57,12 +42,26 @@ class ValidLoginTest < ValidLogin
   end
 
   test "redirect after login" do
-    follow_redirect! # Visit the page after the redirect and check
-                     # what is there on the lines below
+    follow_redirect!
     assert_template 'users/show'
     assert_select "a[href=?]", login_path, count: 0
     assert_select "a[href=?]", logout_path
     assert_select "a[href=?]", user_path(@user)
+  end
+end
+
+class RememberingTest < UsersLogin
+  test "login with remembering" do
+    log_in_as(@user, remember_me: '1')
+    assert_not cookies[:remember_token].blank?
+  end
+
+  test "login without remembering" do
+    # Log in to set the cookie.
+    log_in_as(@user, remember_me: '1')
+    # Log in again and verify that the cookie from above is deleted.
+    log_in_as(@user, remember_me: '0')
+    assert cookies[:remember_token].blank?
   end
 end
 
