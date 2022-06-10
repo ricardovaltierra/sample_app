@@ -70,7 +70,7 @@ Rails.application.configure do
   config.action_mailer.delivery_method = :smtp
   host = 'https://salty-falls-87825.herokuapp.com'
   config.action_mailer.default_url_options = { host: host }
-  config.action_mailer.smpt_settings = {
+  config.action_mailer.smtp_settings = {
     :address              => 'smtp.sendgrid.net',
     :port                 => '587',
     :authentication       =>  :plain,
