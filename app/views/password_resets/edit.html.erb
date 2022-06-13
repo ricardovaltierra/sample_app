@@ -1,2 +1,24 @@
-<h1>PasswordReset#edit</h1>
-<p>Find me in app/views/password_reset/edit.html.erb</p>
+<% provide(:title, 'Reset password') %>
+<h1>Reset password</h1>
+
+<div class="row">
+  <div class="col-md-6 col-md-offset-3">
+    <%# Below, being 'params[:id]' the token to be compared against the model attribute %>
+    <%= form_with(model: @user, url: password_reset_path(params[:id])) do |f| %>
+      <%= render 'shared/error_messages' %>
+
+      <%# Below, a hidden field tag to catch user's email since is required to find %>
+      <%# the user on the db by its email %>
+      <%= hidden_field_tag :email, @user.email %>
+      <%# Above, instead of f.hidden_field (which sets params[:user][:email]) %>
+      <%# this one sets params[:email] %>
+      <%= f.label :password %>
+      <%= f.password_field :password, class: 'form-control' %>
+
+      <%= f.label :password_confirmation, "Confirmation" %>
+      <%= f.password_field :password_confirmation, class: 'form-control' %>
+
+      <%= f.submit "Update password", class: "btn btn-primary" %>
+    <% end %>
+  </div>
+</div>
