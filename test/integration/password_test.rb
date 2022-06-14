@@ -10,6 +10,7 @@ class PasswordResets < ActionDispatch::IntegrationTest
     # Clear registered sent mails so this are not 
     # detected by the tests
     ActionMailer::Base.deliveries.clear
+    @user = users(:michael)
   end
 end
 
@@ -35,7 +36,6 @@ class PasswordResetForm < PasswordResets
     # super, to send the parameter to
     # setup mehtod set on parent
     super
-    @user = users(:michael)
     post password_resets_path,
          params: { password_reset: { email: @user.email } }
     @reset_user = assigns(:user)
@@ -99,8 +99,51 @@ class PasswordUpdateTest < PasswordResetForm
           params: { email: @reset_user.email,
                     user: { password:              "foobaz",
                             password_confirmation: "foobaz" } }
+    @reset_user.reload
+    assert_nil @reset_user.reset_digest
     assert is_logged_in?
     assert_not flash.empty?
     assert_redirected_to @reset_user
+  end
+end
+
+class ExpiredToken < PasswordResets
+  def setup
+    # super again, to pass the parameters up to the
+    # parent
+    super
+    # Create a password-reset token.
+    post password_resets_path,
+         # Do you remember the 'password_reset[email]'
+         # input field from above?
+         params: { password_reset: { email: @user.email } }
+    @reset_user = assigns(:user)
+    # Expire the token by hand.
+    @reset_user.update_attribute(:reset_sent_at, 3.hours.ago)
+    # Attempt to update the user's password.
+    # here we send the reset token since the path has it
+    # embedded in the middle
+    patch password_reset_path(@reset_user.reset_token),
+    # And now the params hash for the patch request,
+    # the hash that is supposed to have the data
+    # (coming from the form) that will update the db
+          params: { email: @reset_user.email,
+                    user: { password:              "foobar",
+                            password_confirmation: "foobar" } }
+    
+  end
+end
+
+class ExpiredTokenTest < ExpiredToken
+
+  test "should redirect to the password reset page" do
+    assert_redirected_to new_password_reset_url
+  end
+
+  test "should include the word 'expired' on the password reset page" do
+    follow_redirect!
+    # Here, 'response.body' is used to find a match of the word
+    # 'expired' over all of the response HTML 
+    assert_match /expired/i, response.body
   end
 end
