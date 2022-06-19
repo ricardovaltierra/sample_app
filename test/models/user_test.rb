@@ -73,5 +73,13 @@ class UserTest < ActiveSupport::TestCase
 					# not filled the remember_token
 					# attribute, since the error occurs
 					# even before it ever gets required
-  end 
+  end
+
+  test "associated microposts should be destroyed" do
+    @user.save
+    @user.microposts.create!(content: "Lorem ipsum")
+    assert_difference 'Micropost.count', -1 do
+      @user.destroy
+    end
+  end
 end
