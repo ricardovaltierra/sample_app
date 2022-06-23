@@ -3,6 +3,7 @@ class User < ApplicationRecord
   has_many :active_relationships, class_name: "Relationship",
                                   foreign_key: "follower_id",
                                   dependent: :destroy
+  has_many :following, through: :active_relationships, source: :followed
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save :downcase_email
   before_create :create_activation_digest
@@ -98,6 +99,32 @@ class User < ApplicationRecord
   # See "Following users" for the full implementation.
   def feed
     Micropost.where("user_id = ?", id)
+  end
+
+  # Follows a user.
+  def follow(other_user)
+    # unless aplying to validate a User can't follow himself
+    following << other_user unless self == other_user
+  end
+
+  # Unfollows a user.
+  def unfollow(other_user)
+    # 'following' here comes to be like a retrieved array that contains
+    # all of the users self is currently following (retrieved those from
+    # the relationship table). So then we're going to delete the
+    # user received as a parameter from that array of followed users
+    following.delete(other_user)
+  end
+
+  # Returns true if the current user is following the other user.
+  def following?(other_user)
+    # Here :)... this may be just for a more readable and
+    # understandable method naming since we're just checking
+    # if a given user is inside of the following array (at a
+    # db-level, checking out if the id of the user given to
+    # include?... kind of is inside the array of users ids
+    # self is 'following'
+    following.include?(other_user)
   end
 
   private
