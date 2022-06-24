@@ -19,7 +19,8 @@ class FollowPagesTest < Following
     @user.following.each do |user|
       # A link (a gravatar one) to the user profile
       # for each one of the followed users
-      assert_select 'a[href=?]', user_path(user)
+      assert_select 'a[href=?]', user_path(user),
+                                 html: image_gravatar_tag(user, size: 30)
     end
   end
 

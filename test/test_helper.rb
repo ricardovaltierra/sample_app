@@ -31,4 +31,10 @@ class ActionDispatch::IntegrationTest
                                            password: password,
                                            remember_me: remember_me } }
   end
+
+  def image_gravatar_tag(user, size: 80)
+    gravatar_id  = Digest::MD5::hexdigest(user.email.downcase)
+    gravatar_url = "https://secure.gravatar.com/avatar/#{gravatar_id}?s=#{size}"
+    "<img alt=\"#{user.name}\" class=\"gravatar\" src=\"#{gravatar_url}\">"
+  end
 end
