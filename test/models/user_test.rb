@@ -113,7 +113,7 @@ class UserTest < ActiveSupport::TestCase
     archer  = users(:archer)
     lana    = users(:lana)
     # Post from followed user
-    lana.micropos.each do |post_following|
+    lana.microposts.each do |post_following|
       assert michael.feed.include?(post_following)
     end
     # Self-posts for user with followers
