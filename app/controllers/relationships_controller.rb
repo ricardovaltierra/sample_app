@@ -2,22 +2,29 @@ class RelationshipsController < ApplicationController
   before_action :logged_in_user
 
   def create
-    # First, find the user we're going to follow
-    user = User.find(params[:followed_id])
-    # The current logged in add a follower with
-    # follow model method
-    current_user.follow(user)
-    redirect_to user
+    # We get the params[:followed_id] from the
+    # 'follow' button clicked on browser, that
+    # is actually a form with just a submit 
+    # 'follow' button
+    @user = User.find (params[:followed_id])
+    current_user.follow(@user)
+    respond_to do |format|
+      format.html { redirect_to @user }
+      format.turbo_stream
+    end
   end
 
   def destroy
-    # We take the followed one, form the Relationship
-    # corresponding record with the params[:id]
-    user = Relationship.find(params[:id]).followed
-    # Using 'unfollow' User model method, removes
-    # the desired record
-    current_user.unfollow(user)
-    # :see_other, 'cause we deleted a record
-    redirect_to user, status: :see_other
+    # Same, get the params[:id] from the 
+    # form that looks like an 'unfollow'
+    # button to check Relationships table
+    # and take the followed_id, and from
+    # there the user
+    @user = Relationship.find(params[:id]).followed
+    current_user.unfollow(@user)
+    respond_to do |format|
+      format.html { redirect_to @user, status: :see_other }
+      format.turbo_stream
+    end
   end
 end
