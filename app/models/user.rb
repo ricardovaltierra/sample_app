@@ -102,7 +102,16 @@ class User < ApplicationRecord
   # Defines a proto-feed.
   # See "Following users" for the full implementation.
   def feed
-    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+    following_ids = "SELECT followed_id FROM relationships
+                     WHERE follower_id = :user_id"
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
+    # This below includes is coming for avoiding the 
+    # classic N + 1 problem, and getting the list of 
+    # users for every thrown micropost. Also, since
+    # the feed requires to get the image for every
+    # micropost, we're adding 'image_attachment: :blob'
+             .includes(:user, image_attachment: :blob)
   end
 
   # Follows a user.
