@@ -99,4 +99,30 @@ class UserTest < ActiveSupport::TestCase
     michael.follow(michael)
     assert_not michael.following?(michael)
   end
+
+  test "feed should have the right posts" do
+    # For the final status feed, as seen below
+    # we need to check (like in Twitter) that
+    # this feed includes the microposts from
+    # the people that we're currently following,
+    # and our own micropost. Also, we cretainly
+    # should not see microposts from people
+    # we're not currently following. Below
+    # we're checking the three cases
+    michael = users(:michael)
+    archer  = users(:archer)
+    lana    = users(:lana)
+    # Post from followed user
+    lana.micropos.each do |post_following|
+      assert michael.feed.include?(post_following)
+    end
+    # Self-posts for user with followers
+    michael.microposts.each do |post_self|
+      assert michael.feed.include?(post_self)
+    end
+    # Posts from non-followed user
+    archer.microposts.each do |post_unfollowed|
+      assert_not michael.feed.include?(post_unfollowed)
+    end
+  end
 end
