@@ -69,15 +69,15 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'https://salty-falls-87825.herokuapp.com'
+  host = 'https://sample-app-rv.fly.dev'
   config.action_mailer.default_url_options = { host: host }
   config.action_mailer.smtp_settings = {
-    :address              => 'smtp.sendgrid.net',
+    :address              => 'smtp-relay.brevo.com',
     :port                 => '587',
     :authentication       =>  :plain,
-    :user_name            =>  'apikey',
-    :password             =>  ENV['SENDGRID_API_KEY'],
-    :domain               =>  'heroku.com',
+    :user_name            =>  'ricardo_valtierra@outlook.com',
+    :password             =>  ENV['BREVO_API_KEY'],
+    :domain               =>  'fly.dev',
     :enable_starttls_auto => true
   }
 

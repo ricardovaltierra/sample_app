@@ -19,6 +19,10 @@ gem "stimulus-rails",             "1.0.4"
 gem "jbuilder",                   "2.11.5"
 gem "puma",                       "5.6.4"
 gem "bootsnap",                   "1.12.0", require: false
+gem "dockerfile-rails", ">= 1.5", :group => :development
+gem "redis", "~> 5.0"
+gem "sentry-ruby", "~> 5.13"
+gem "sentry-rails", "~> 5.13"
 
 group :development, :test do
   gem "sqlite3", "1.4.2"
@@ -50,10 +54,3 @@ end
 # on a native Windows system:
 # gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
 
-gem "dockerfile-rails", ">= 1.5", :group => :development
-
-gem "redis", "~> 5.0"
-
-gem "sentry-ruby", "~> 5.13"
-
-gem "sentry-rails", "~> 5.13"
